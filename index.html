@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MojePriznaky.sk</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <style>
+    :root {
+      --primary: #2563eb;
+      --accent: #22d3ee;
+      --background: #d7efff;
+      --text: #0f172a;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+    }
+    .navbar {
+      background-color: #5db7b7;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+    .navbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .logo-heart {
+      height: 50px;
+    }
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+    .main-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--text);
+    }
+    .main-title span {
+      color: var(--primary);
+    }
+    .subtitle {
+      font-size: 0.9rem;
+      color: #334155;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .navbar-right {
+      display: flex;
+      gap: 1rem;
+    }
+    .btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 0.95rem;
+      text-decoration: none;
+      text-align: center;
+      line-height: 1;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .btn-outline {
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      background: transparent;
+    }
+    .btn-outline:hover {
+      background-color: rgba(37, 99, 235, 0.1);
+    }
+    .btn-filled {
+      background-color: var(--accent);
+      color: white;
+      border: none;
+    }
+    .btn-filled:hover {
+      background-color: #0ecbe2;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-width: 200px;
+    }
+    .sidebar-button {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sidebar-button:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+    .symptom-input {
+      width: 100%;
+      min-height: 150px;
+      padding: 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+    .btn-primary {
+      padding: 0.75rem 1.5rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white;
+    }
+    .result-box {
+      margin-top: 2rem;
+      background: white;
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .footer {
+      background: var(--accent);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem;
+      margin-top: 4rem;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-input {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+    }
+    .switch-modal {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .switch-modal a {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .navbar-left,
+      .navbar-right {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+      }
+      .container {
+        flex-direction: column;
+        padding: 1rem;
+      }
+      .sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .sidebar-button {
+        flex: 1 1 45%;
+        text-align: center;
+      }
+      .card {
+        padding: 1rem;
+      }
+      .symptom-input {
+        font-size: 1rem;
+      }
+      .btn,
+      .btn-primary {
+        width: 100%;
+        text-align: center;
+      }
+      .result-box {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="navbar-left">
+      <img src="logo.png" alt="Logo" class="logo-heart" />
+      <div class="logo-text">
+        <div class="main-title">moje<span>priznaky.sk</span></div>
+        <div class="subtitle">S láskou k pacientovi</div>
+      </div>
+    </div>
+    <div class="navbar-right">
+      <a href="#" onclick="openAuthModal()" class="btn btn-outline">LOGIN</a>
+      <a href="#" onclick="startPremiumCheckout()" class="btn btn-filled">PACIENT PREMIUM</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1 style="text-align:center; margin-bottom: 2rem;">Najnovšia AI Symptom Kontrola</h1>
+    <div style="display: flex; gap: 2rem; align-items: flex-start;">
+      <div class="sidebar">
+        <button class="sidebar-button" onclick="sendToDoctor()">📤 Poslať doktorovi</button>
+        <button class="sidebar-button" onclick="showHistory()">🕘 História</button>
+        <button class="sidebar-button" onclick="setChildMode()">👶 Moje dieťa</button>
+        <button class="sidebar-button" onclick="openEmergencyMap()">📍 Najbližšia pohotovosť</button>
+        <button class="sidebar-button" onclick="openDentalMap()">🦷 Zubná pohotovosť</button>
+      </div>
+      <div style="flex: 1;">
+        <div class="card">
+          <h2>Popíšte svoje príznaky</h2>
+          <textarea id="symptomText" class="symptom-input" placeholder="Napríklad: Horúčka, bolesť hlavy..."></textarea>
+          <div style="display:flex; gap:1rem; margin-top:1rem;">
+            <button class="btn-primary" onclick="sendSymptoms()">Analyzovať príznaky</button>
+            <label class="btn-primary" style="cursor: pointer;">
+              <input type="file" id="imageInput" hidden accept="image/*" />
+              Nahráť foto
+            </label>
+          </div>
+          <div class="result-box">
+            <h3>Výsledok analýzy</h3>
+            <div id="result">Tu sa zobrazí výsledok AI analýzy...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2025 MojePriznaky.sk – Všetky práva vyhradené.</p>
+    <p>Táto aplikácia neposkytuje lekársku diagnózu. V prípade vážneho stavu kontaktujte svojho lekára alebo tiesňovú linku.</p>
+    <p>Kontakt: <a href="mailto:mojepriznaky@gmail.com" style="color:white;text-decoration:underline;">mojepriznaky@gmail.com</a></p>
+  </footer>
+
+  <!-- Modals -->
+  <div id="authModal" class="modal">
+    <div class="modal-content">
+      <h2 style="text-align:center;">Prihlásenie</h2>
+      <input id="loginEmail" type="email" class="modal-input" placeholder="Email">
+      <input id="loginPassword" type="password" class="modal-input" placeholder="Heslo">
+      <button class="btn btn-primary" onclick="submitLogin()" style="width:100%;">Prihlásiť sa</button>
+      <div class="switch-modal">
+        Nemáte účet? <a onclick="closeAuthModal(); openRegisterModal()">Zaregistrujte sa</a>
+      </div>
+      <button onclick="closeAuthModal()" class="btn" style="margin-top:1rem; width:100%;">Zatvoriť</button>
+    </div>
+  </div>
+
+  <div id="registerModal" class="modal">
+    <div class="modal-content">
+      <h2 style="text-align:center;">Registrácia</h2>
+      <input id="regFirstName" type="text" class="modal-input" placeholder="Meno">
+      <input id="regLastName" type="text" class="modal-input" placeholder="Priezvisko">
+      <input id="regEmail" type="email" class="modal-input" placeholder="Email">
+      <input id="regPassword" type="password" class="modal-input" placeholder="Heslo">
+      <button class="btn btn-primary" onclick="submitRegister()" style="width:100%;">Zaregistrovať sa</button>
+      <div class="switch-modal">
+        Máte účet? <a onclick="closeRegisterModal(); openAuthModal()">Prihláste sa</a>
+      </div>
+      <button onclick="closeRegisterModal()" class="btn" style="margin-top:1rem; width:100%;">Zatvoriť</button>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "mojepriznakynew-production.up.railway.app";
+
+    // Auth functions
+    function openAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
+    function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+    function openRegisterModal() { document.getElementById('registerModal').style.display = 'flex'; }
+    function closeRegisterModal() { document.getElementById('registerModal').style.display = 'none'; }
+
+    async function submitLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      if (!email || !password) return alert("Vyplňte všetky polia");
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+        
+        const data = await res.json();
+        if (!data.token) throw new Error("Chýbajúci token v odpovedi");
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        closeAuthModal();
+        updateNavbar();
+        alert("Úspešné prihlásenie!");
+      } catch (error) {
+        console.error("Login error:", error);
+        alert(`Prihlásenie zlyhalo: ${error.message}`);
+      }
+    }
+
+    async function submitRegister() {
+      const firstName = document.getElementById('regFirstName').value.trim();
+      const lastName = document.getElementById('regLastName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value.trim();
+
+      if (!firstName || !lastName || !email || !password) {
+        return alert("Vyplňte všetky polia");
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            email,
+            password,
+            subscriptionTier: "PACIENT"
+          })
+        });
+
+        if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
+        
+        const data = await res.json();
+        if (!data.token) throw new Error("Chýbajúci token v odpovedi");
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        
+        closeRegisterModal();
+        updateNavbar();
+        alert("Úspešná registrácia!");
+      } catch (error) {
+        console.error("Registration error:", error);
+        alert(`Registrácia zlyhala: ${error.message}`);
+      }
+    }
+
+    function updateNavbar() {
+      const token = localStorage.getItem("token");
+      const user = JSON.parse(localStorage.getItem("user") || null);
+      const loginBtn = document.querySelector('.btn.btn-outline');
+      const premiumBtn = document.querySelector('.btn.btn-filled');
+
+      if (loginBtn) {
+        if (token && user) {
+          loginBtn.textContent = user.initials || "Ú";
+          loginBtn.onclick = logout;
+          loginBtn.style.cssText = "font-weight: bold; font-size: 1rem; text-transform: uppercase;";
+        } else {
+          loginBtn.textContent = "LOGIN";
+          loginBtn.onclick = openAuthModal;
+          loginBtn.style.cssText = "";
+        }
+      }
+
+      if (premiumBtn) {
+        premiumBtn.style.display = token ? "inline-block" : "none";
+      }
+    }
+
+    function logout() {
+      localStorage.clear();
+      updateNavbar();
+      alert("Úspešne odhlásené!");
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      updateNavbar();
+      if (window.location.href.includes('checkout-success')) {
+        checkPremiumUpgrade();
+      }
+    });
+
+    // Other functions
+    async function checkPremiumUpgrade() {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const res = await fetch(`${API_BASE}/api/me`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (!res.ok) throw new Error("Failed to check premium status");
+        
+        const data = await res.json();
+        if (data.role === "PACIENT_PREMIUM") {
+          localStorage.setItem("user", JSON.stringify(data));
+          updateNavbar();
+          alert("🎉 Úspešne aktivované PREMIUM!");
+        }
+      } catch (error) {
+        console.error("Premium check error:", error);
+      }
+    }
+
+    // Symptom analysis
+    async function sendSymptoms() {
+      const token = localStorage.getItem("token");
+      if (!token) return alert("Najprv sa prihláste");
+
+      const text = document.getElementById('symptomText').value.trim();
+      const imageFile = document.getElementById('imageInput').files[0];
+      const resultBox = document.getElementById('result');
+
+      if (!text && !imageFile) return alert("Zadajte príznaky alebo nahrajte foto");
+
+      try {
+        resultBox.textContent = "🔍 Analyzujem...";
+        
+        // OCR processing
+        let finalText = text;
+        if (imageFile) {
+          const formData = new FormData();
+          formData.append('file', imageFile);
+          const ocrRes = await fetch(`${API_BASE}/api/ocr/upload`, {
+            method: 'POST',
+            body: formData
+          });
+          const ocrData = await ocrRes.json();
+          finalText += `\n${ocrData.text || ''}`;
+        }
+
+        // AI analysis
+        const analysisRes = await fetch(`${API_BASE}/api/freeform`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ prompt: finalText })
+        });
+
+        if (!analysisRes.ok) throw new Error("Chyba analýzy");
+        
+        const analysisData = await analysisRes.json();
+        resultBox.textContent = analysisData.result || "Nepodarilo sa analyzovať";
+      } catch (error) {
+        console.error("Analysis error:", error);
+        resultBox.textContent = "❌ Chyba pri analýze";
+      }
+    }
+
+    // Map functions
+    function openEmergencyMap() {
+      window.open("https://www.google.com/maps/search/pohotovosť+v+okolí", "_blank");
+    }
+
+    function openDentalMap() {
+      window.open("https://www.google.com/maps/search/zubná+pohotovosť", "_blank");
+    }
+
+    // Placeholder functions
+    function sendToDoctor() { alert("Funkcia vo vývoji"); }
+    function showHistory() { alert("Funkcia vo vývoji"); }
+    function setChildMode() { alert("Funkcia vo vývoji"); }
+
+    // Stripe checkout
+    async function startPremiumCheckout() {
+      const token = localStorage.getItem("token");
+      if (!token) return alert("Najprv sa prihláste");
+
+      try {
+        const res = await fetch(`${API_BASE}/stripe/create-checkout-session`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (!res.ok) throw new Error("Stripe error");
+        
+        const url = await res.text();
+        if (url.startsWith('https://')) {
+          window.location.href = url;
+        }
+      } catch (error) {
+        console.error("Checkout error:", error);
+        alert("Chyba pri platbe");
+      }
+    }
+  </script>
+</body>
+</html>
